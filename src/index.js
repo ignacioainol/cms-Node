@@ -15,8 +15,13 @@ app.engine('.hbs',exphbs({
 }));
 app.set('view engine','.hbs');
 
+// Parse URL-encoded bodies (as sent by HTML forms)
+// para enviar datos de un form a un controlador :D
+app.use(express.urlencoded());
+
 //routes
 app.use(require('./routes/index'));
+app.use(require('./routes/users'));
 
 //database connection
 require('./database');
