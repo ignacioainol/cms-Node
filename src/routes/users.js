@@ -36,13 +36,13 @@ router.post('/user/signup',async (req,res) => {
         
         if(emailUser){
             req.flash('error_msg','Email already exists');
-			res.redirect('/users/signup');
+			res.redirect('/user/signup');
         }
 
         const newUser = new User({username,email,password});
         newUser.password = await newUser.encryptPassword(password);
         await newUser.save();
-        
+        req.flash('success_msg','You are registered!');
     }
     
 });

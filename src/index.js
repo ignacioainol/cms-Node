@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const exphbs = require('express-handlebars');
 const multer = require('multer');
+const session = require('express-session');
 const flash = require('connect-flash');
 
 
@@ -21,6 +22,13 @@ app.set('view engine','.hbs');
 // Parse URL-encoded bodies (as sent by HTML forms)
 // para enviar datos de un form a un controlador :D
 app.use(express.urlencoded());
+
+app.use(session({
+	secret:'mysecretapp',
+	resave: true,
+	saveUninitialized:true
+}));
+
 app.use(flash());
 
 //Globals Variables
