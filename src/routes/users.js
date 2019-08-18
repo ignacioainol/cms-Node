@@ -3,11 +3,11 @@ const router = express.Router();
 
 const User = require('../models/User');
 
-router.get('/user/signup', (req,res) => {
+router.get('/users/signup', (req,res) => {
     res.render('users/signup');
 });
 
-router.post('/user/signup',async (req,res) => {
+router.post('/users/signup',async (req,res) => {
     const {username,email,password,password_confirm} = req.body;
 
     const errors = [];
@@ -36,15 +36,20 @@ router.post('/user/signup',async (req,res) => {
         
         if(emailUser){
             req.flash('error_msg','Email already exists');
-			res.redirect('/user/signup');
+			res.redirect('/users/signup');
         }
 
         const newUser = new User({username,email,password});
         newUser.password = await newUser.encryptPassword(password);
         await newUser.save();
         req.flash('success_msg','You are registered!');
+        res.redirect('/users/signin');
     }
     
 });
+
+router.get('/users/signin',(req,res) => {
+    res.render('users/signin');
+})
 
  module.exports = router;
