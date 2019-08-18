@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-//const User = require('../models/User');
+const User = require('../models/User');
 
 router.get('/user/signup', (req,res) => {
     res.render('users/signup');
 });
 
-router.post('/user/signup',(req,res) => {
+router.post('/user/signup',async (req,res) => {
     const {username,email,password,password_confirm} = req.body;
 
     const errors = [];
@@ -29,7 +29,20 @@ router.post('/user/signup',(req,res) => {
     }
     
     if(errors.length > 0){
-        res.render('users/signup',{errors,username,email,password,password_confirm});
+        //res.render('users/signup',{errors,username,email,password,password_confirm});
+        res.render('users/signup',{errors});
+    }else{
+        const emailUser = await User.findOne({email: email});
+        
+        if(emailUser){
+            req.flash('error_msg','Email already exists');
+			res.redirect('/users/signup');
+        }
+
+        const newUser = new User({username,email,password});
+        newUser.password = await newUser.encryptPassword(password);
+        await newUser.save();
+        
     }
     
 });

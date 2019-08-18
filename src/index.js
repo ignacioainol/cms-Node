@@ -3,6 +3,8 @@ const express = require('express');
 const app = express();
 const exphbs = require('express-handlebars');
 const multer = require('multer');
+const flash = require('connect-flash');
+
 
 //settings
 app.set('port', process.env.PORT || 3000);
@@ -15,9 +17,20 @@ app.engine('.hbs',exphbs({
 }));
 app.set('view engine','.hbs');
 
+//Middlewares
 // Parse URL-encoded bodies (as sent by HTML forms)
 // para enviar datos de un form a un controlador :D
 app.use(express.urlencoded());
+app.use(flash());
+
+//Globals Variables
+app.use((req,res,next) => {
+	res.locals.success_msg = req.flash('success_msg');
+	res.locals.error_msg = req.flash('error_msg');
+	res.locals.error = req.flash('error');
+	res.locals.user = req.user || null; 
+	next();
+});
 
 //routes
 app.use(require('./routes/index'));
