@@ -52,4 +52,8 @@ router.get('/users/signin',(req,res) => {
     res.render('users/signin');
 })
 
+router.post('/users/signin',(req,res) => {
+    res.send('signin');
+});
+
  module.exports = router;
